@@ -1,0 +1,8 @@
+- name: Check services emqx is enabled
+  ansible.builtin.service:
+    name: emqx
+    enabled: yes
+- name: Check services nginx is enabled
+  ansible.builtin.service:
+    name: nginx
+    enabled: yes
