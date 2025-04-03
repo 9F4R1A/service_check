@@ -6,3 +6,11 @@
   ansible.builtin.service:
     name: nginx
     enabled: yes
+- name: Check services elasticsearch.service is enabled
+  ansible.builtin.service:
+    name: elasticsearch
+    enabled: yes
+- name: Check services tidb is enabled
+  ansible.builtin.service:
+    name: tidb
+    enabled: yes
