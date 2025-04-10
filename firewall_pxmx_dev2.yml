@@ -1,0 +1,16 @@
+- hosts: proxmox-dev2
+  become: true
+  become_user: root
+  tasks:
+    - set_fact:
+        adapter: vmbr0
+    - set_fact:
+        ssh_port: 22
+    - name: "Flush firewall NAT rules"
+      shell: "/usr/sbin/iptables -t nat --flush"
+    - name: "/usr/sbin/iptables -t nat -A POSTROUTING -s 192.168.1.0/24 -o {{ adapter }} -j MASQUERADE"
+    - name: "Firewall port forward {{ item.desc }} from {{ item.origport }} to {{ item.dest }}"
+      shell: "/usr/sbin/iptables -t nat -A PREROUTING -i {{ adapter }} -p tcp --dport {{ item.origport }}  -j DNAT --to {{ item.dest }}:22"
+      loop:
+            - { origport: 11022, desc: "host pxe-installer", dest: 192.168.1.110 }
+            - { origport: 11422, desc: "host xserver-inst", dest: 192.168.1.114 }
