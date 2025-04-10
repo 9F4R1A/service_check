@@ -1,6 +1,5 @@
 - hosts: proxmoxdev2
-  become: true
-  become_user: root
+  gather_facts: yes
   tasks:
     - set_fact:
         adapter: vmbr0
@@ -11,7 +10,7 @@
     - name: "add original rules"
       shell: "/usr/sbin/iptables -t nat -A POSTROUTING -s 192.168.1.0/24 -o {{ adapter }} -j MASQUERADE"
     - name: "Firewall port forward {{ item.desc }} from {{ item.origport }} to {{ item.dest }}"
-      shell: "/usr/sbin/iptables -t nat -A PREROUTING -i {{ adapter }} -p tcp --dport {{ item.origport }}  -j DNAT --to {{ item.dest }}:22"
+      shell: "/usr/sbin/iptables -t nat -A PREROUTING -i {{ adapter }} -p tcp --dport {{ item.origport }}  -j DNAT --to {{ item.dest }}:{{ ssh_port: }}"
       loop:
             - { origport: 11022, desc: "host pxe-installer", dest: 192.168.1.110 }
             - { origport: 11422, desc: "host xserver-inst", dest: 192.168.1.114 }
