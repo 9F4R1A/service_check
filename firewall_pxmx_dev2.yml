@@ -1,4 +1,4 @@
-- hosts: proxmox-dev2
+- hosts: proxmoxdev2
   become: true
   become_user: root
   tasks:
